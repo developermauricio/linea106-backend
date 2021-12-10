@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Client;
+use Laravel\Passport\Token;
 
 class LoginController extends Controller
 {
@@ -29,7 +31,19 @@ class LoginController extends Controller
         );
 
         FacadesRequest::replace($request->input());
-        $content = json_decode(Route::dispatch($request)->getContent());
-        return response()->json($content);
+        return Route::dispatch($request);
+    }
+
+    public function userAuth(Request $request)
+    {
+        return $request->user();
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user('api')->token()->revoke();
+        // Token::whereIn('id', $tokens)
+        //     ->update(['revoked', true]);
+        return response()->json([]);
     }
 }
