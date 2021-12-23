@@ -15,9 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'auth:api'], function (){
+Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user', [LoginController::class, 'userAuth']);
     Route::post('/logout', [LoginController::class, 'logout']);
 });
 
 Route::post('/login', [LoginController::class, 'login']);
+
+
+Route::middleware('throttle:100000,1')->group(function () {
+    Route::post('restore/anuncios', [App\Http\Controllers\Migrations\AnuncioController::class, 'restore']);
+    Route::post('restore/usuarios', [App\Http\Controllers\Migrations\UsuarioController::class, 'restore']);
+    Route::post('restore/pacientes', [App\Http\Controllers\Migrations\PacienteController::class, 'restore']);
+});
