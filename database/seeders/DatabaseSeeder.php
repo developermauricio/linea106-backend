@@ -16,7 +16,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $path = 'database/seeders/sql/colombia.sql';
+        $path = 'database/seeders/sql/departamentos.sql';
+        DB::unprepared(file_get_contents($path));
+        $path = 'database/seeders/sql/municipios.sql';
+        DB::unprepared(file_get_contents($path));
+        $path = 'database/seeders/sql/veredas.sql';
         DB::unprepared(file_get_contents($path));
 
         \App\Models\User::factory(1)->create([
