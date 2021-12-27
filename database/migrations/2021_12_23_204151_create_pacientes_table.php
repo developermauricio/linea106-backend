@@ -66,6 +66,9 @@ class CreatePacientesTable extends Migration
             $table->unsignedBigInteger('vereda_id')->nullable();
             $table->foreign('vereda_id')->references('id')->on('veredas');
 
+            $table->unsignedBigInteger('como_conocio_id')->nullable();
+            $table->foreign('como_conocio_id')->references('id')->on('como_conocieron');
+
             $table->timestamps();
         });
     }

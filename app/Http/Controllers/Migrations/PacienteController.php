@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Migrations;
 
 use App\Http\Controllers\Controller;
+use App\Models\ComoConocio;
 use App\Models\Departamento;
 use App\Models\EstadoCivil;
 use App\Models\Etnia;
@@ -87,7 +88,10 @@ class PacienteController extends Controller
                             }
                             break;
                         case 'como_conocio':
-                            $paciente->como_conocio = $this->getString($value);
+                            $como_conocio = $this->getComoConocio($value);
+                            if ($como_conocio){
+                                $paciente->como_conocio_id = $como_conocio->id;
+                            }
                             break;
                         case 'poblacion_interes':
                             $poblacion_interes = $this->getPoblacionInteres($value);
@@ -371,6 +375,19 @@ class PacienteController extends Controller
             $genero->save();
         }
         return $genero;
+    }
+
+    private function getComoConocio($name)
+    {
+        $name = $this->getString($name, true);
+        $como_conocio = ComoConocio::where('name', 'like', '%' . $name . '%')->first();
+
+        if (!$como_conocio) {
+            $como_conocio = new ComoConocio();
+            $como_conocio->name = $name;
+            $como_conocio->save();
+        }
+        return $como_conocio;
     }
 
     private function getString($string, $camelcase = false)
