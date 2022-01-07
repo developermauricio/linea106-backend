@@ -11,7 +11,7 @@ use stdClass;
 class AnuncioController extends Controller
 {
 
-    const ATTRIBUTES = ',id,fecha,contenido,titulo,';
+    const ATTRIBUTES = ',key_server,id,fecha,contenido,titulo,';
 
     public function restore(Request $request)
     {
@@ -36,19 +36,18 @@ class AnuncioController extends Controller
     private function createAnuncio($data)
     {
         try {
-            $anuncio = Anuncio::where('key', $data['id'])->first();
+            $anuncio = Anuncio::where('key_server', $data['key_server'])->first();
             if (!$anuncio) {
                 DB::beginTransaction();
                 $anuncio = new Anuncio();
+                $anuncio->key_server = $data['key_server'];
+                $anuncio->key = md5(json_encode($data));
 
                 foreach ($data as $key => $value) {
                     if (!strpos(self::ATTRIBUTES, $key)) {
                         throw new \Exception('Nuevo atributo: ' . $key, 1);
                     }
                     switch ($key) {
-                        case 'id':
-                            $anuncio->key = $value;
-                            break;
                         case 'fecha':
                             $anuncio->created_at = $value;
                             break;

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 
 class PacienteController extends Controller
 {
-    const ATTRIBUTES = ',id,genero,apellido,sexo,orientacion_sexual,municipio,edad,como_conocio,poblacion_interes,sisben,etnicidad,nombre,ocupacion,escolaridad,estado_civil,direccion,zona,fecha_nacimiento,tipo_id,otroDepartamento,vereda,';
+    const ATTRIBUTES = ',key_server,id,genero,apellido,sexo,orientacion_sexual,municipio,edad,como_conocio,poblacion_interes,sisben,etnicidad,nombre,ocupacion,escolaridad,estado_civil,direccion,zona,fecha_nacimiento,tipo_id,otroDepartamento,vereda,';
 
     public function restore(Request $request)
     {
@@ -48,12 +48,12 @@ class PacienteController extends Controller
     private function createPaciente($data)
     {
         try {
-            $key = md5(json_encode($data));
-            $paciente = Paciente::where('key', $key)->first();
+            $paciente = Paciente::where('key_server', $data['key_server'])->first();
             if (!$paciente) {
                 DB::beginTransaction();
                 $paciente = new paciente();
-                $paciente->key = $key;
+                $paciente->key_server = $data['key_server'];
+                $paciente->key = md5(json_encode($data));
 
                 foreach ($data as $key => $value) {
                     if (!$value) {

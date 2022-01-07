@@ -15,6 +15,9 @@ class User extends Authenticatable
     const ADMINISTRADOR = 'Administrador';
     const PSICOLOGO = 'Psicólogo';
 
+    const ACTIVO = true;
+    const INACTIVO = false;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -48,5 +51,16 @@ class User extends Authenticatable
     public function AauthAcessToken()
     {
         return $this->hasMany('\App\OauthAccessToken');
+    }
+
+    /**
+     * Find the user instance for the given username.
+     *
+     * @param  string  $username
+     * @return \App\Models\User
+     */
+    public function findForPassport($username)
+    {
+        return $this->where('email', $username)->where('estado', self::ACTIVO)->first();
     }
 }

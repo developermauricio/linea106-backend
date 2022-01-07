@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller
 {
-    const ATTRIBUTES = ',id,correo,nombre,apellido,rol,clave,';
+    const ATTRIBUTES = ',key_server,id,correo,nombre,apellido,rol,clave,';
 
     public function restore(Request $request)
     {
@@ -34,10 +34,12 @@ class UsuarioController extends Controller
     private function createUser($data)
     {
         try {
-            $user = User::where('key', $data['id'])->first();
+            $user = User::where('key_server', $data['key_server'])->first();
             if (!$user) {
                 DB::beginTransaction();
                 $user = new User();
+                $user->key_server = $data['key_server'];
+                $user->key = md5(json_encode($data));
 
                 foreach ($data as $key => $value) {
                     if (!strpos(self::ATTRIBUTES, $key)) {
@@ -45,7 +47,9 @@ class UsuarioController extends Controller
                     }
                     switch ($key) {
                         case 'id':
-                            $user->key = $value;
+                            if (is_numeric($value)) {
+                                $user->identificacion = $value;
+                            }
                             break;
                         case 'correo':
                             $user->email = $value;
