@@ -15,5 +15,8 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::get('/', function () {
-});
+Route::get('/{any}', function () {
+    return view('index-angular');
+})->where('any', '.*');
+
+Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');

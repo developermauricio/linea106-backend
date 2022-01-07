@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +23,12 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 Route::post('/login', [LoginController::class, 'login']);
 
+// Auth::routes();
+// Password Reset Routes...
+// Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
+
+Route::post('password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('password/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 
 Route::middleware('throttle:100000,1')->group(function () {
     Route::post('restore/anuncios', [App\Http\Controllers\Migrations\AnuncioController::class, 'restore']);
