@@ -25,7 +25,8 @@ class CasoController extends Controller
             'usuario',
             'origen',
             'motivo_consulta',
-            'linea_intervencion'
+            'linea_intervencion',
+            'respuesta'
         ])->orderBy('fecha_inicio', 'DESC');
 
         if ($fuente) {
