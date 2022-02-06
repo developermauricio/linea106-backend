@@ -29,6 +29,11 @@ class Caso extends Model
         return $this->belongsTo(MotivoConsulta::class, 'motivo_consulta_id');
     }
 
+    public function motivo_consulta_especifico()
+    {
+        return $this->belongsTo(MotivoConsultaEspecifico::class, 'motivo_consulta_especifico_id');
+    }
+
     public function linea_intervencion()
     {
         return $this->belongsTo(LineaIntervencion::class, 'linea_intervencion_id');
@@ -44,24 +49,9 @@ class Caso extends Model
         return $this->belongsTo(TipoPaciente::class, 'tipo_paciente_id');
     }
 
-    public function motivo()
-    {
-        return $this->belongsTo(Motivo::class, 'motivo_id');
-    }
-
     public function turno()
     {
         return $this->belongsTo(Turno::class, 'turno_id');
-    }
-
-    public function tipo_caso()
-    {
-        return $this->belongsTo(TipoCaso::class, 'tipo_caso_id');
-    }
-
-    public function tipo_caso_especifico()
-    {
-        return $this->belongsTo(TipoCasoEspecifico::class, 'tipo_caso_especifico_id');
     }
 
     public function etnicidad()

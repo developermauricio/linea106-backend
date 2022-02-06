@@ -24,6 +24,7 @@ class CreateCasosTable extends Migration
             $table->dateTime('fecha_fin')->nullable();
             $table->string('nombre_llama')->nullable();
             $table->string('documento_llama')->nullable();
+            $table->text('descripcion_motivo')->nullable();
             // $table->string('respuesta')->nullable();
             // $table->string('radicado')->nullable();
             $table->longText('errores')->nullable();
@@ -33,6 +34,9 @@ class CreateCasosTable extends Migration
 
             $table->unsignedBigInteger('motivo_consulta_id')->nullable();
             $table->foreign('motivo_consulta_id')->references('id')->on('motivo_consultas');
+
+            $table->unsignedBigInteger('motivo_consulta_especifico_id')->nullable();
+            $table->foreign('motivo_consulta_especifico_id')->references('id')->on('motivo_consulta_especificos');
 
             $table->unsignedBigInteger('quien_comunica_id')->nullable();
             $table->foreign('quien_comunica_id')->references('id')->on('quienes_comunican');
@@ -49,17 +53,8 @@ class CreateCasosTable extends Migration
             $table->unsignedBigInteger('origen_id');
             $table->foreign('origen_id')->references('id')->on('origenes');
 
-            $table->unsignedBigInteger('motivo_id')->nullable();
-            $table->foreign('motivo_id')->references('id')->on('motivos');
-
             $table->unsignedBigInteger('turno_id')->nullable();
             $table->foreign('turno_id')->references('id')->on('turnos');
-
-            $table->unsignedBigInteger('tipo_caso_id')->nullable();
-            $table->foreign('tipo_caso_id')->references('id')->on('tipo_casos');
-
-            $table->unsignedBigInteger('tipo_caso_especifico_id')->nullable();
-            $table->foreign('tipo_caso_especifico_id')->references('id')->on('tipo_caso_especificos');
 
             $table->unsignedBigInteger('etnicidad_id')->nullable();
             $table->foreign('etnicidad_id')->references('id')->on('etnicidades');

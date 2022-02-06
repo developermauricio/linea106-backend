@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Caso;
 use App\Models\Etnicidad;
 use App\Models\LineaIntervencion;
-use App\Models\Motivo;
 use App\Models\MotivoConsulta;
+use App\Models\MotivoConsultaEspecifico;
 use App\Models\Origen;
 use App\Models\Paciente;
 use App\Models\QuienComunica;
@@ -15,8 +15,6 @@ use App\Models\Radicado;
 use App\Models\Relacion;
 use App\Models\Remision;
 use App\Models\Respuesta;
-use App\Models\TipoCaso;
-use App\Models\TipoCasoEspecifico;
 use App\Models\TipoPaciente;
 use App\Models\Turno;
 use App\Models\User;
@@ -63,6 +61,11 @@ class CasoController extends Controller
                 $caso->key = md5(json_encode($data));
                 $caso->errores = '';
 
+                if (isset($data['motivoConsulta'])) {
+                    $motivoConsulta = $data['motivoConsulta'];
+                    $caso->motivo_consulta_id = $this->getMotivoConsulta($motivoConsulta)->id;
+                }
+
                 foreach ($data as $key => $value) {
                     if (!$value) {
                         continue;
@@ -100,9 +103,6 @@ class CasoController extends Controller
                                 $caso->errores .= "\n" . $th->getMessage() . "\n";
                             }
                             break;
-                        case 'motivoConsulta':
-                            $caso->motivo_consulta_id = $this->getMotivoConsulta($value)->id;
-                            break;
                         case 'quien_comunica':
                             $caso->quien_comunica_id = $this->getQuienComunica($value)->id;
                             break;
@@ -136,9 +136,6 @@ class CasoController extends Controller
                                 $caso->errores .= "\n fecha fin " . $th->getMessage() . "\n";
                             }
                             break;
-                        case 'cual_motivo':
-                            $caso->motivo_id = $this->getMotivo($value)->id;
-                            break;
                         case 'turno':
                             $caso->turno_id = $this->getTurno($value)->id;
                             break;
@@ -163,6 +160,8 @@ class CasoController extends Controller
                         case 'etnicidad':
                             $caso->etnicidad_id = $this->getEtnicidad($value)->id;
                             break;
+                        case 'cual_motivo':
+                            $caso->descripcion_motivo = $value;
                         case 'especificoViolencia':
                         case 'especificoSuicidio':
                         case 'especificoSaludMental':
@@ -178,9 +177,8 @@ class CasoController extends Controller
                         case 'especificoSaludSexual':
                         case 'especificoLaboral':
                         case 'especificoEducacion':
-                            $tipo_caso_especifico = $this->getTipoCasoEspecifico($key, $value);
-                            $caso->tipo_caso_id = $tipo_caso_especifico->tipo_caso_id;
-                            $caso->tipo_caso_especifico_id = $tipo_caso_especifico->id;
+                            $motivo_consulta_especifico = $this->getMotivoConsultaEspecifico($value, $caso);
+                            $caso->motivo_consulta_especifico_id = $motivo_consulta_especifico->id;
                             break;
                         case 'numberOfDocs':
                             break;
@@ -229,25 +227,17 @@ class CasoController extends Controller
         return $usuario;
     }
 
-    private function getTipoCasoEspecifico($key, $value)
+    private function getMotivoConsultaEspecifico($value, $caso)
     {
         $value = $this->getString($value, true);
-        $tipo_caso_especifico = TipoCasoEspecifico::where('name', '=', $value)->first();
-        if (!$tipo_caso_especifico) {
-
-            $tipoCaso = TipoCaso::where('name', $key)->first();
-            if (!$tipoCaso) {
-                $tipoCaso = new TipoCaso();
-                $tipoCaso->name = $key;
-                $tipoCaso->save();
-            }
-
-            $tipo_caso_especifico = new TipoCasoEspecifico();
-            $tipo_caso_especifico->name = $value;
-            $tipo_caso_especifico->tipo_caso_id = $tipoCaso->id;
-            $tipo_caso_especifico->save();
+        $motivo_consulta_especifico = MotivoConsultaEspecifico::where('name', '=', $value)->first();
+        if (!$motivo_consulta_especifico) {
+            $motivo_consulta_especifico = new MotivoConsultaEspecifico();
+            $motivo_consulta_especifico->name = $value;
+            $motivo_consulta_especifico->motivo_consulta_id = $caso->motivo_consulta_id;
+            $motivo_consulta_especifico->save();
         }
-        return $tipo_caso_especifico;
+        return $motivo_consulta_especifico;
     }
 
     private function getEtnicidad($value)
@@ -296,18 +286,6 @@ class CasoController extends Controller
             $turno->save();
         }
         return $turno;
-    }
-
-    private function getMotivo($value)
-    {
-        $value = $this->getString($value, true);
-        $motivo = Motivo::where('name', '=', $value)->first();
-        if (!$motivo) {
-            $motivo = new Motivo();
-            $motivo->name = $value;
-            $motivo->save();
-        }
-        return $motivo;
     }
 
 
