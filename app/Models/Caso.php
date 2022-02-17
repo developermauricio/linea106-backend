@@ -78,4 +78,18 @@ class Caso extends Model
     {
         return $this->belongsTo(Radicado::class, 'radicado_id');
     }
+
+    public function scopeFilterByDate($query, $fechaInicio, $fechaFin)
+    {
+        return $query->whereDate('fecha_inicio', '>=', $fechaInicio)
+            ->whereDate('fecha_inicio', '<=', $fechaFin)
+            ->whereDate('fecha_fin', '<=', $fechaFin)
+            ->whereDate('fecha_fin', '>=', $fechaInicio);
+    }
+
+    public function scopeByAuthUser($query)
+    {
+        $user_id = auth('api')->user()->id;
+        return $query->where('usuario_id', '=', $user_id);
+    }
 }

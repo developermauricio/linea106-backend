@@ -24,7 +24,7 @@ class CreatePacientesTable extends Migration
             $table->unsignedSmallInteger('edad')->nullable();
             $table->string('direccion')->nullable();
             $table->date('fecha_nacimiento')->nullable();
-            $table->string('como_conocio')->nullable();
+            $table->string('como_conocio_descripcion')->nullable();
 
             $table->longText('errores')->nullable();
 

@@ -88,10 +88,11 @@ class PacienteController extends Controller
                             }
                             break;
                         case 'como_conocio':
-                            $como_conocio = $this->getComoConocio($value);
-                            if ($como_conocio){
-                                $paciente->como_conocio_id = $como_conocio->id;
-                            }
+                            $paciente->como_conocio_descripcion = $value;
+                            // $como_conocio = $this->getComoConocio($value);
+                            // if ($como_conocio){
+                            //     $paciente->como_conocio_id = $como_conocio->id;
+                            // }
                             break;
                         case 'poblacion_interes':
                             $poblacion_interes = $this->getPoblacionInteres($value);

@@ -146,7 +146,7 @@ class CasoController extends Controller
                             $caso->documento_llama = $this->getString($value);
                             break;
                         case 'relacion':
-                            $caso->nombre_llama = $this->getRelacion($value)->id;
+                            $caso->descripcion_relacion = $value;
                             break;
                         case 'remision':
                             $caso->remision_id = $this->getRemision($value)->id;
@@ -155,13 +155,14 @@ class CasoController extends Controller
                             $caso->respuesta_id = $this->getRespuesta($value)->id;
                             break;
                         case 'radicado':
-                            $caso->radicado_id = $this->getRadicado($value)->id;
+                            $caso->descripcion_radicado = $value;
                             break;
                         case 'etnicidad':
                             $caso->etnicidad_id = $this->getEtnicidad($value)->id;
                             break;
                         case 'cual_motivo':
                             $caso->descripcion_motivo = $value;
+                            break;
                         case 'especificoViolencia':
                         case 'especificoSuicidio':
                         case 'especificoSaludMental':
@@ -223,6 +224,7 @@ class CasoController extends Controller
         $usuario->email = $original;
         $usuario->password = "N/A";
         $usuario->rol = User::PSICOLOGO;
+        $usuario->estado = User::INACTIVO;
         $usuario->save();
         return $usuario;
     }

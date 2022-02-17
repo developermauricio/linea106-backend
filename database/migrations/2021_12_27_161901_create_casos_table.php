@@ -25,6 +25,8 @@ class CreateCasosTable extends Migration
             $table->string('nombre_llama')->nullable();
             $table->string('documento_llama')->nullable();
             $table->text('descripcion_motivo')->nullable();
+            $table->text('descripcion_relacion')->nullable();
+            $table->text('descripcion_radicado')->nullable();
             // $table->string('respuesta')->nullable();
             // $table->string('radicado')->nullable();
             $table->longText('errores')->nullable();

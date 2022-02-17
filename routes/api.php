@@ -39,8 +39,52 @@ Route::middleware('throttle:100000,1')->group(function () {
 });
 
 
+Route::get('init-data-case', [
+    App\Http\Controllers\Common\CasoController::class, 'initDataCase'
+]);
 
-Route::middleware(['auth:api'])->group(function () {
+Route::get('init-data-paciente', [
+    App\Http\Controllers\Common\CasoController::class, 'initDataPaciente'
+]);
+
+Route::post('cases', [
+    App\Http\Controllers\Common\CasoController::class, 'gestionCaso'
+]);
+
+Route::get('cases/{id}', [
+    App\Http\Controllers\Common\CasoController::class, 'casoById'
+]);
+
+Route::get('motivo-especifico/{id}', [
+    App\Http\Controllers\Common\CasoController::class, 'motivoEspecificoById'
+]);
+
+Route::get('search-paciente', [
+    App\Http\Controllers\Common\CasoController::class, 'searchPaciente'
+]);
+
+Route::get('paciente/{id}', [
+    App\Http\Controllers\Common\CasoController::class, 'pacienteById'
+]);
+
+Route::get(
+    'municipios/{idDepartamento}',
+    [
+        App\Http\Controllers\Common\LocationController::class,
+        'getMunicipiosByDepartamento'
+    ]
+);
+
+Route::get(
+    'veredas/{idMunicipio}',
+    [
+        App\Http\Controllers\Common\LocationController::class,
+        'getVeredasByMunicipio'
+    ]
+);
+
+Route::middleware([])->group(function () {
+
     Route::get('show-case/{id}', [App\Http\Controllers\Common\CasoController::class, 'show']);
     Route::get('casos', [App\Http\Controllers\Common\CasoController::class, 'getAll']);
 
@@ -48,6 +92,11 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('psicologo')->group(function () {
         Route::get('anuncios', [App\Http\Controllers\Psicologo\AnuncioController::class, 'getAll']);
+
+        Route::get('statics', [
+            App\Http\Controllers\Psicologo\CasoController::class,
+            'getStatics'
+        ]);
     });
 
     Route::prefix('admin')->group(function () {
