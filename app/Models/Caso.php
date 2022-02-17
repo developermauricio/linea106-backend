@@ -87,9 +87,12 @@ class Caso extends Model
             ->whereDate('fecha_fin', '>=', $fechaInicio);
     }
 
-    public function scopeByAuthUser($query)
+    public function scopeByAuthUser($query, $filter = true)
     {
-        $user_id = auth('api')->user()->id;
-        return $query->where('usuario_id', '=', $user_id);
+        if ($filter) {
+            $user_id = auth('api')->user()->id;
+            return $query->where('usuario_id', '=', $user_id);
+        }
+        return $query;
     }
 }

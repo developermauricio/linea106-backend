@@ -83,20 +83,21 @@ Route::get(
     ]
 );
 
-Route::middleware([])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
 
     Route::get('show-case/{id}', [App\Http\Controllers\Common\CasoController::class, 'show']);
     Route::get('casos', [App\Http\Controllers\Common\CasoController::class, 'getAll']);
 
     Route::put('update_profile', [App\Http\Controllers\Common\UserController::class, 'updateProfile']);
 
+    Route::get('statics', [
+        App\Http\Controllers\Common\StaticsController::class,
+        'getStatics'
+    ]);
+
     Route::prefix('psicologo')->group(function () {
         Route::get('anuncios', [App\Http\Controllers\Psicologo\AnuncioController::class, 'getAll']);
 
-        Route::get('statics', [
-            App\Http\Controllers\Psicologo\CasoController::class,
-            'getStatics'
-        ]);
     });
 
     Route::prefix('admin')->group(function () {
