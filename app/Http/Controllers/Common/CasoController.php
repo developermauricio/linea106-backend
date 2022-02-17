@@ -254,6 +254,8 @@ class CasoController extends Controller
             }
             if (!$caso) {
                 $caso = new Caso();
+                $caso->tipo_paciente_id = $tipoPaciente;
+                $caso->usuario_id = auth('api')->user()->id;
             }
             $caso->observaciones = $casoData['observaciones'];
             $caso->narrativa = $casoData['narrativa'];
@@ -299,8 +301,6 @@ class CasoController extends Controller
             if (isset($casoData['radicado'])) {
                 $caso->radicado_id = $casoData['radicado']['id'];
             }
-            $caso->tipo_paciente_id = $tipoPaciente;
-            $caso->usuario_id = auth('api')->user()->id;
             $caso->save();
             return $caso;
         } catch (\Throwable $th) {
