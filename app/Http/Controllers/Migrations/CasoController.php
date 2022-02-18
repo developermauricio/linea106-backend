@@ -26,6 +26,13 @@ class CasoController extends Controller
 
     const ATTRIBUTES = ',key_server,observaciones,narrativa,fuente,ultima_actualizacion,paciente,motivoConsulta,quien_comunica,linea_intervencion,psicologo,fecha_inicio,origen,tipo_paciente,fecha_fin,cual_motivo,turno,nombre_llama,documento_llama,relacion,remision,respuesta,radicado,etnicidad,especificoViolencia,especificoSuicidio,especificoSaludMental,especificoEstadosEmocionales,especificoVulnerabilidad,especificoContexto,especificoSalud,especificoTrastornos,especificoCoronavirus,especificoFamiliar,especificoSustancias,especificoProtocolos,especificoSaludSexual,especificoLaboral,especificoEducacion,numberOfDocs,';
 
+    private $dateNow;
+
+    public function __construct()
+    {
+        $this->dateNow = \Carbon\Carbon::now();
+    }
+
     public function restore(Request $request)
     {
         $casos = collect($request->input('items'));
@@ -89,7 +96,13 @@ class CasoController extends Controller
                             break;
                         case 'ultima_actualizacion':
                             try {
-                                $caso->updated_at = $this->getDate($value);
+                                $date = $this->getDate($value);
+                                $legal = $this->dateNow->isAfter($date);
+                                if ($legal) {
+                                    $caso->updated_at = $date;
+                                } else {
+                                    $caso->updated_at = $this->dateNow;
+                                }
                             } catch (\Throwable $th) {
                                 $caso->updated_at = null;
                                 $caso->errores .= "\n ultima actualización " . $th->getMessage() . "\n";
@@ -187,10 +200,14 @@ class CasoController extends Controller
                 }
 
                 if ($caso->created_at) {
-                    if ($caso->updated_at) {
+                    $legal = $this->dateNow->isAfter($caso->updated_at);
+                    if ($legal && $caso->updated_at) {
                         $caso->created_at = $caso->updated_at;
                     } else if ($caso->fecha_fin) {
-                        $caso->updated_at = $caso->fecha_fin;
+                        $legal = $this->dateNow->isAfter($caso->fecha_fin);
+                        if ($legal && !$caso->updated_at) {
+                            $caso->updated_at = $caso->fecha_fin;
+                        }
                     }
                 }
                 $caso->save();

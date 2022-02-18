@@ -92,6 +92,8 @@ class CasoController extends Controller
             });
         }
 
+        $casos->orderBy('updated_at');
+
         return response()->json($casos->paginate(10));
     }
 

@@ -16,12 +16,6 @@ use SebastianBergmann\Environment\Console;
 |
 */
 
-Route::get('test', function () {
-    dd(boolval("false"));
-    $time = \Carbon\Carbon::parseFromLocale('2022-02-14T10:06', 'es-co', '-5');
-    return response()->json($time);
-});
-
 Route::get('/{any}', function () {
     return view('index-angular');
 })->where('any', '.*');
