@@ -91,4 +91,80 @@ class ReportController extends Controller
 
         return response()->json($casos);
     }
+
+    public function getMesTipoPacientes(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('tipo_pacientes.name, count(casos.id) as total')
+            ->leftJoin('tipo_pacientes', 'tipo_pacientes.id', '=', 'tipo_paciente_id')
+            ->byMonth($date)
+            ->groupBy('tipo_paciente_id')
+            ->get();
+
+        return response()->json($casos);
+    }
+
+    public function getMesTurnos(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('turnos.name, count(casos.id) as total')
+            ->leftJoin('turnos', 'turnos.id', '=', 'turno_id')
+            ->byMonth($date)
+            ->groupBy('turno_id')
+            ->get();
+
+        return response()->json($casos);
+    }
+
+    public function getMesEdades(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('edad, count(casos.id) as total')
+            ->leftJoin('pacientes', 'pacientes.id', '=', 'paciente_id')
+            ->byMonth($date)
+            ->groupBy('edad')
+            ->get();
+
+        $anonimo = 0;
+        $entre1_10 = 0;
+        $entre11_20 = 0;
+        $entre21_30 = 0;
+        $entre31_40 = 0;
+        $entre41_50 = 0;
+        $mas50 = 0;
+
+        foreach ($casos as $caso_edad) {
+            if ($caso_edad->edad == null) {
+                $anonimo += $caso_edad->total;
+            } else if ($caso_edad->edad <= 10) {
+                $entre1_10 += $caso_edad->total;
+            } else if ($caso_edad->edad <= 20) {
+                $entre11_20 += $caso_edad->total;
+            } else if ($caso_edad->edad <= 30) {
+                $entre21_30 += $caso_edad->total;
+            } else if ($caso_edad->edad <= 40) {
+                $entre31_40 += $caso_edad->total;
+            } else if ($caso_edad->edad <= 50) {
+                $entre41_50 += $caso_edad->total;
+            } else {
+                $mas50 += $caso_edad->total;
+            }
+        }
+
+        return [
+            ['name' => 'Anónimo', 'total' => $anonimo],
+            ['name' => 'Entre 1 y 10 años', 'total' => $entre1_10],
+            ['name' => 'Entre 11 y 20 años', 'total' => $entre11_20],
+            ['name' => 'Entre 21 y 30 años', 'total' => $entre21_30],
+            ['name' => 'Entre 31 y 40 años', 'total' => $entre31_40],
+            ['name' => 'Entre 41 y 50 años', 'total' => $entre41_50],
+            ['name' => 'Más de 50 años', 'total' => $mas50]
+        ];
+    }
 }

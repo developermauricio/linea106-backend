@@ -59,6 +59,18 @@ Route::group(['prefix' => 'mes'], function () {
     Route::get('origen', [
         \App\Http\Controllers\Common\ReportController::class, 'getMesOrigenes'
     ]);
+
+    Route::get('tipo-paciente', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesTipoPacientes'
+    ]);
+
+    Route::get('turno', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesTurnos'
+    ]);
+
+    Route::get('edad', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesEdades'
+    ]);
 });
 
 
