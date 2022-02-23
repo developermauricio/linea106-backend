@@ -82,9 +82,7 @@ class Caso extends Model
     public function scopeFilterByDate($query, $fechaInicio, $fechaFin)
     {
         return $query->whereDate('fecha_inicio', '>=', $fechaInicio)
-            ->whereDate('fecha_inicio', '<=', $fechaFin)
-            ->whereDate('fecha_fin', '<=', $fechaFin)
-            ->whereDate('fecha_fin', '>=', $fechaInicio);
+            ->whereDate('fecha_inicio', '<=', $fechaFin);
     }
 
     public function scopeByAuthUser($query, $filter = true)
@@ -94,5 +92,18 @@ class Caso extends Model
             return $query->where('usuario_id', '=', $user_id);
         }
         return $query;
+    }
+
+    public function scopeByYear($query, $year)
+    {
+        return $query->whereRaw('YEAR(fecha_inicio) = ?', [$year]);
+    }
+
+    public function scopeByMonth($query, $date)
+    {
+        $fechaInicio = \Carbon\Carbon::parse(substr($date, 0, 7));
+        $fechaFin = $fechaInicio->clone()->addMonth(1);
+        return $query->whereDate('fecha_inicio', '>=', $fechaInicio)
+            ->whereDate('fecha_inicio', '<', $fechaFin);
     }
 }

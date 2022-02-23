@@ -39,6 +39,25 @@ Route::middleware('throttle:100000,1')->group(function () {
 });
 
 
+Route::get('reportes-casos', [
+    \App\Http\Controllers\Common\ReportController::class, 'getReporteCasos'
+]);
+
+Route::get('reporte-conducta-suicida', [
+    \App\Http\Controllers\Common\ReportController::class, 'getSuicidioReporte'
+]);
+
+Route::get('reporte-menores', [
+    \App\Http\Controllers\Common\ReportController::class, 'getMenoresReporte'
+]);
+
+Route::group(['prefix' => 'mes'], function () {
+    Route::get('psicologo', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesPsicologos'
+    ]);
+});
+
+
 Route::get('init-data-case', [
     App\Http\Controllers\Common\CasoController::class, 'initDataCase'
 ]);
@@ -97,7 +116,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('psicologo')->group(function () {
         Route::get('anuncios', [App\Http\Controllers\Psicologo\AnuncioController::class, 'getAll']);
-
     });
 
     Route::prefix('admin')->group(function () {

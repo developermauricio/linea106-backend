@@ -13,7 +13,7 @@ class StaticsController extends Controller
 
     public function __construct()
     {
-        $this->isPsicologo = auth('api')->user()->rol === User::PSICOLOGO;
+        // $this->isPsicologo = auth('api')->user()->rol === User::PSICOLOGO;
     }
 
     public function getStatics(Request $request)

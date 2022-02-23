@@ -50,7 +50,9 @@ class CasoController extends Controller
         if (isset($errores[0])) {
             return response()->json($errores, 500);
         }
-        return response()->json([], 201);
+        return response()->json([
+            Caso::select('id')->count()
+        ], 201);
     }
 
     private function createCaso($data)
@@ -59,13 +61,9 @@ class CasoController extends Controller
             $caso = Caso::where('key_server', $data['key_server'])->first();
             if (!$caso) {
                 DB::beginTransaction();
-                if (!isset($data['observaciones']) || !$data['observaciones']) {
-                    return null;
-                }
 
                 $caso = new Caso();
                 $caso->key_server = $data['key_server'];
-                $caso->key = md5(json_encode($data));
                 $caso->errores = '';
 
                 if (isset($data['motivoConsulta'])) {
@@ -236,8 +234,8 @@ class CasoController extends Controller
         }
 
         $usuario = new User();
-        $usuario->name = $original;
-        $usuario->last_name = $original;
+        $usuario->name = 'N/A';
+        $usuario->last_name = 'N/A';
         $usuario->email = $original;
         $usuario->password = "N/A";
         $usuario->rol = User::PSICOLOGO;
