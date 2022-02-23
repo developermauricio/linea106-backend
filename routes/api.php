@@ -55,6 +55,10 @@ Route::group(['prefix' => 'mes'], function () {
     Route::get('psicologo', [
         \App\Http\Controllers\Common\ReportController::class, 'getMesPsicologos'
     ]);
+
+    Route::get('origen', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesOrigenes'
+    ]);
 });
 
 

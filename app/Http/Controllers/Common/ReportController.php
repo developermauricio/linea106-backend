@@ -77,4 +77,18 @@ class ReportController extends Controller
 
         return response()->json($casos);
     }
+
+    public function getMesOrigenes(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('origenes.name, count(casos.id) as total')
+            ->leftJoin('origenes', 'origenes.id', '=', 'origen_id')
+            ->byMonth($date)
+            ->groupBy('origen_id')
+            ->get();
+
+        return response()->json($casos);
+    }
 }
