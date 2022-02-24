@@ -134,6 +134,14 @@ Route::get('paciente/{id}', [
     App\Http\Controllers\Common\CasoController::class, 'pacienteById'
 ]);
 
+Route::get('get-seguimientos/{idCase}', [
+    App\Http\Controllers\Common\SeguimientoController::class, 'getSeguimientosByCase'
+]);
+
+Route::post('store-seguimiento', [
+    App\Http\Controllers\Common\SeguimientoController::class, 'storeSeguimiento'
+]);
+
 Route::get(
     'municipios/{idDepartamento}',
     [
