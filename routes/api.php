@@ -39,126 +39,126 @@ Route::middleware('throttle:100000,1')->group(function () {
 });
 
 
-Route::get('reportes-casos', [
-    \App\Http\Controllers\Common\ReportController::class, 'getReporteCasos'
-]);
-
-Route::get('reporte-conducta-suicida', [
-    \App\Http\Controllers\Common\ReportController::class, 'getSuicidioReporte'
-]);
-
-Route::get('reporte-menores', [
-    \App\Http\Controllers\Common\ReportController::class, 'getMenoresReporte'
-]);
-
-Route::group(['prefix' => 'mes'], function () {
-    Route::get('psicologo', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesPsicologos'
-    ]);
-
-    Route::get('origen', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesOrigenes'
-    ]);
-
-    Route::get('tipo-paciente', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesTipoPacientes'
-    ]);
-
-    Route::get('turno', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesTurnos'
-    ]);
-
-    Route::get('edad', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesEdades'
-    ]);
-
-    Route::get('escolaridad', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesEscolaridades'
-    ]);
-
-    Route::get('sexo', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesSexos'
-    ]);
-
-    Route::get('zona', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesZonas'
-    ]);
-
-    Route::get('ocupacion', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesOcupaciones'
-    ]);
-
-    Route::get('genero', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesGeneros'
-    ]);
-
-    Route::get('ciudad', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesCiudades'
-    ]);
-
-    Route::get('motivo-especifico', [
-        \App\Http\Controllers\Common\ReportController::class, 'getMesMotivosEspecificos'
-    ]);
-
-});
-
-Route::get('get-motivos-consulta-reportes', [
-    \App\Http\Controllers\Common\MotivoConsultaController::class, 'getMotivosConsultaReportes'
-]);
-
-Route::get('init-data-case', [
-    App\Http\Controllers\Common\CasoController::class, 'initDataCase'
-]);
-
-Route::get('init-data-paciente', [
-    App\Http\Controllers\Common\CasoController::class, 'initDataPaciente'
-]);
-
-Route::post('cases', [
-    App\Http\Controllers\Common\CasoController::class, 'gestionCaso'
-]);
-
-Route::get('cases/{id}', [
-    App\Http\Controllers\Common\CasoController::class, 'casoById'
-]);
-
-Route::get('motivo-especifico/{id}', [
-    App\Http\Controllers\Common\CasoController::class, 'motivoEspecificoById'
-]);
-
-Route::get('search-paciente', [
-    App\Http\Controllers\Common\CasoController::class, 'searchPaciente'
-]);
-
-Route::get('paciente/{id}', [
-    App\Http\Controllers\Common\CasoController::class, 'pacienteById'
-]);
-
-Route::get('get-seguimientos/{idCase}', [
-    App\Http\Controllers\Common\SeguimientoController::class, 'getSeguimientosByCase'
-]);
-
-Route::post('store-seguimiento', [
-    App\Http\Controllers\Common\SeguimientoController::class, 'storeSeguimiento'
-]);
-
-Route::get(
-    'municipios/{idDepartamento}',
-    [
-        App\Http\Controllers\Common\LocationController::class,
-        'getMunicipiosByDepartamento'
-    ]
-);
-
-Route::get(
-    'veredas/{idMunicipio}',
-    [
-        App\Http\Controllers\Common\LocationController::class,
-        'getVeredasByMunicipio'
-    ]
-);
-
 Route::middleware(['auth:api'])->group(function () {
+
+    Route::get('reportes-casos', [
+        \App\Http\Controllers\Common\ReportController::class, 'getReporteCasos'
+    ]);
+
+    Route::get('reporte-conducta-suicida', [
+        \App\Http\Controllers\Common\ReportController::class, 'getSuicidioReporte'
+    ]);
+
+    Route::get('reporte-menores', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMenoresReporte'
+    ]);
+
+    Route::group(['prefix' => 'mes'], function () {
+        Route::get('psicologo', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesPsicologos'
+        ]);
+
+        Route::get('origen', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesOrigenes'
+        ]);
+
+        Route::get('tipo-paciente', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesTipoPacientes'
+        ]);
+
+        Route::get('turno', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesTurnos'
+        ]);
+
+        Route::get('edad', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesEdades'
+        ]);
+
+        Route::get('escolaridad', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesEscolaridades'
+        ]);
+
+        Route::get('sexo', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesSexos'
+        ]);
+
+        Route::get('zona', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesZonas'
+        ]);
+
+        Route::get('ocupacion', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesOcupaciones'
+        ]);
+
+        Route::get('genero', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesGeneros'
+        ]);
+
+        Route::get('ciudad', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesCiudades'
+        ]);
+
+        Route::get('motivo-especifico', [
+            \App\Http\Controllers\Common\ReportController::class, 'getMesMotivosEspecificos'
+        ]);
+
+    });
+
+    Route::get('get-motivos-consulta-reportes', [
+        \App\Http\Controllers\Common\MotivoConsultaController::class, 'getMotivosConsultaReportes'
+    ]);
+
+    Route::get('init-data-case', [
+        App\Http\Controllers\Common\CasoController::class, 'initDataCase'
+    ]);
+
+    Route::get('init-data-paciente', [
+        App\Http\Controllers\Common\CasoController::class, 'initDataPaciente'
+    ]);
+
+    Route::post('cases', [
+        App\Http\Controllers\Common\CasoController::class, 'gestionCaso'
+    ]);
+
+    Route::get('cases/{id}', [
+        App\Http\Controllers\Common\CasoController::class, 'casoById'
+    ]);
+
+    Route::get('motivo-especifico/{id}', [
+        App\Http\Controllers\Common\CasoController::class, 'motivoEspecificoById'
+    ]);
+
+    Route::get('search-paciente', [
+        App\Http\Controllers\Common\CasoController::class, 'searchPaciente'
+    ]);
+
+    Route::get('paciente/{id}', [
+        App\Http\Controllers\Common\CasoController::class, 'pacienteById'
+    ]);
+
+    Route::get('get-seguimientos/{idCase}', [
+        App\Http\Controllers\Common\SeguimientoController::class, 'getSeguimientosByCase'
+    ]);
+
+    Route::post('store-seguimiento', [
+        App\Http\Controllers\Common\SeguimientoController::class, 'storeSeguimiento'
+    ]);
+
+    Route::get(
+        'municipios/{idDepartamento}',
+        [
+            App\Http\Controllers\Common\LocationController::class,
+            'getMunicipiosByDepartamento'
+        ]
+    );
+
+    Route::get(
+        'veredas/{idMunicipio}',
+        [
+            App\Http\Controllers\Common\LocationController::class,
+            'getVeredasByMunicipio'
+        ]
+    );
 
     Route::get('show-case/{id}', [App\Http\Controllers\Common\CasoController::class, 'show']);
     Route::get('casos', [App\Http\Controllers\Common\CasoController::class, 'getAll']);
