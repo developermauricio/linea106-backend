@@ -167,4 +167,111 @@ class ReportController extends Controller
             ['name' => 'Más de 50 años', 'total' => $mas50]
         ];
     }
+
+
+    public function getMesEscolaridades(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('niveles_educacion.name, count(casos.id) as total')
+            ->leftJoin('pacientes', 'pacientes.id', '=', 'casos.paciente_id')
+            ->leftJoin('niveles_educacion', 'niveles_educacion.id', '=', 'pacientes.nivel_educacion_id')
+            ->byMonth($date)
+            ->groupBy('nivel_educacion_id')
+            ->get();
+
+        return response()->json($casos);
+    }
+
+    public function getMesSexos(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('sexos.name, count(casos.id) as total')
+            ->leftJoin('pacientes', 'pacientes.id', '=', 'casos.paciente_id')
+            ->leftJoin('sexos', 'sexos.id', '=', 'pacientes.sexo_id')
+            ->byMonth($date)
+            ->groupBy('sexo_id')
+            ->get();
+
+        return response()->json($casos);
+    }
+
+    public function getMesZonas(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('zonas.name, count(casos.id) as total')
+            ->leftJoin('pacientes', 'pacientes.id', '=', 'casos.paciente_id')
+            ->leftJoin('zonas', 'zonas.id', '=', 'pacientes.zona_id')
+            ->byMonth($date)
+            ->groupBy('zona_id')
+            ->get();
+
+        return response()->json($casos);
+    }
+
+    public function getMesOcupaciones(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('ocupaciones.name, count(casos.id) as total')
+            ->leftJoin('pacientes', 'pacientes.id', '=', 'casos.paciente_id')
+            ->leftJoin('ocupaciones', 'ocupaciones.id', '=', 'pacientes.ocupacion_id')
+            ->byMonth($date)
+            ->groupBy('ocupacion_id')
+            ->get();
+
+        return response()->json($casos);
+    }
+
+    public function getMesGeneros(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('generos.name, count(casos.id) as total')
+            ->leftJoin('pacientes', 'pacientes.id', '=', 'casos.paciente_id')
+            ->leftJoin('generos', 'generos.id', '=', 'pacientes.genero_id')
+            ->byMonth($date)
+            ->groupBy('genero_id')
+            ->get();
+
+        return response()->json($casos);
+    }
+
+    public function getMesCiudades(Request $request)
+    {
+        $date = $request->input('d');
+
+        $casos = Caso::query()
+            ->selectRaw('municipios.name, count(casos.id) as total')
+            ->leftJoin('pacientes', 'pacientes.id', '=', 'casos.paciente_id')
+            ->leftJoin('municipios', 'municipios.id', '=', 'pacientes.municipio_id')
+            ->byMonth($date)
+            ->groupBy('municipio_id')
+            ->get();
+
+        return response()->json($casos);
+    }
+
+    public function getMesMotivosEspecificos(Request $request)
+    {
+        $date = $request->input('d');
+        $motivo_id = $request->input('motivo');
+
+        $casos = Caso::query()
+            ->selectRaw('motivo_consulta_especificos.name, count(casos.id) as total')
+            ->join('motivo_consulta_especificos', 'motivo_consulta_especificos.id', '=', 'casos.motivo_consulta_especifico_id')
+            ->byMonth($date)
+            ->where('casos.motivo_consulta_id', $motivo_id)
+            ->groupBy('motivo_consulta_especifico_id')
+            ->get();
+
+        return response()->json($casos);
+    }
 }

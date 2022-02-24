@@ -71,8 +71,40 @@ Route::group(['prefix' => 'mes'], function () {
     Route::get('edad', [
         \App\Http\Controllers\Common\ReportController::class, 'getMesEdades'
     ]);
+
+    Route::get('escolaridad', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesEscolaridades'
+    ]);
+
+    Route::get('sexo', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesSexos'
+    ]);
+
+    Route::get('zona', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesZonas'
+    ]);
+
+    Route::get('ocupacion', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesOcupaciones'
+    ]);
+
+    Route::get('genero', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesGeneros'
+    ]);
+
+    Route::get('ciudad', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesCiudades'
+    ]);
+
+    Route::get('motivo-especifico', [
+        \App\Http\Controllers\Common\ReportController::class, 'getMesMotivosEspecificos'
+    ]);
+
 });
 
+Route::get('get-motivos-consulta-reportes', [
+    \App\Http\Controllers\Common\MotivoConsultaController::class, 'getMotivosConsultaReportes'
+]);
 
 Route::get('init-data-case', [
     App\Http\Controllers\Common\CasoController::class, 'initDataCase'
