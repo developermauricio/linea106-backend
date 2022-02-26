@@ -42,7 +42,9 @@ class PacienteController extends Controller
         if (isset($errores[0])) {
             return response()->json($errores, 500);
         }
-        return response()->json([], 201);
+        return response()->json([
+            Paciente::select('id')->count()
+        ], 201);
     }
 
     private function createPaciente($data)
@@ -53,7 +55,7 @@ class PacienteController extends Controller
                 DB::beginTransaction();
                 $paciente = new paciente();
                 $paciente->key_server = $data['key_server'];
-                $paciente->key = md5(json_encode($data));
+                // $paciente->key = md5(json_encode($data));
 
                 foreach ($data as $key => $value) {
                     if (!$value) {

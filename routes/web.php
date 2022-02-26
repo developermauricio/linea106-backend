@@ -16,8 +16,14 @@ use SebastianBergmann\Environment\Console;
 |
 */
 
+Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+Route::get('download-cases', [
+    App\Http\Controllers\Common\DownloadCasoController::class,
+    'downloadExcel'
+]);
+
 Route::get('/{any}', function () {
     return view('index-angular');
 })->where('any', '.*');
 
-Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
