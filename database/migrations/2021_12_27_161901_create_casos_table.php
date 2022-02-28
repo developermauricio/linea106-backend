@@ -16,7 +16,7 @@ class CreateCasosTable extends Migration
         Schema::create('casos', function (Blueprint $table) {
             $table->id();
             $table->string('key_server')->nullable();
-            $table->string('key')->nullable();
+            $table->char('key', 32)->unique('key_md5')->nullable();
             $table->longText('observaciones');
             $table->longText('narrativa');
             $table->string('fuente');

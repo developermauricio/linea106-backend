@@ -13,6 +13,8 @@ class AnuncioController extends Controller
 
     const ATTRIBUTES = ',key_server,id,fecha,contenido,titulo,';
 
+    private $attributes = ["key_server","id","fecha","contenido","titulo"];
+
     public function restore(Request $request)
     {
         $anuncios = collect($request->input('items'));
@@ -33,15 +35,32 @@ class AnuncioController extends Controller
         return response()->json([], 201);
     }
 
+    private function getKey($data)
+    {
+        if (isset($data["key_server"]) && $data["key_server"] && trim($data["key_server"])) {
+            return $data["key_server"];
+        }
+        $key = '';
+        foreach ($this->attributes as $attribute) {
+            if (isset($data[$attribute]) && $data[$attribute]) {
+                $key .= '_' . $data[$attribute];
+            } else {
+                $key .= '_';
+            }
+        }
+        return $key;
+    }
+
     private function createAnuncio($data)
     {
         try {
-            $anuncio = Anuncio::where('key_server', $data['key_server'])->first();
+            $key = md5($this->getKey($data));
+            $anuncio = Anuncio::where('key', $key)->first();
             if (!$anuncio) {
                 DB::beginTransaction();
                 $anuncio = new Anuncio();
                 $anuncio->key_server = $data['key_server'];
-                $anuncio->key = md5(json_encode($data));
+                $anuncio->key = $key;
 
                 foreach ($data as $key => $value) {
                     if (!strpos(self::ATTRIBUTES, $key)) {

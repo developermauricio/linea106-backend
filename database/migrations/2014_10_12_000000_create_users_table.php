@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->boolean('estado')->default(1);
             $table->string('key_server')->nullable();
-            $table->string('key')->nullable();
+            $table->char('key', 32)->unique('key_md5')->nullable();
             $table->string('identificacion')->nullable();
             $table->string('name');
             $table->string('last_name');

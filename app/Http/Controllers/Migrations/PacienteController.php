@@ -25,6 +25,8 @@ class PacienteController extends Controller
 {
     const ATTRIBUTES = ',key_server,id,genero,apellido,sexo,orientacion_sexual,municipio,edad,como_conocio,poblacion_interes,sisben,etnicidad,nombre,ocupacion,escolaridad,estado_civil,direccion,zona,fecha_nacimiento,tipo_id,otroDepartamento,vereda,';
 
+    private $attributes = ["key_server", "id", "genero", "apellido", "sexo", "orientacion_sexual", "municipio", "edad", "como_conocio", "poblacion_interes", "sisben", "etnicidad", "nombre", "ocupacion", "escolaridad", "estado_civil", "direccion", "zona", "fecha_nacimiento", "tipo_id", "otroDepartamento", "vereda"];
+
     public function restore(Request $request)
     {
         $pacientes = collect($request->input('items'));
@@ -47,15 +49,32 @@ class PacienteController extends Controller
         ], 201);
     }
 
+    private function getKey($data)
+    {
+        if (isset($data["key_server"]) && $data["key_server"] && trim($data["key_server"])) {
+            return $data["key_server"];
+        }
+        $key = '';
+        foreach ($this->attributes as $attribute) {
+            if (isset($data[$attribute]) && $data[$attribute]) {
+                $key .= '_' . $data[$attribute];
+            } else {
+                $key .= '_';
+            }
+        }
+        return $key;
+    }
+
     private function createPaciente($data)
     {
         try {
-            $paciente = Paciente::where('key_server', $data['key_server'])->first();
+            $key = md5($this->getKey($data));
+            $paciente = Paciente::where('key', $key)->first();
             if (!$paciente) {
                 DB::beginTransaction();
                 $paciente = new paciente();
                 $paciente->key_server = $data['key_server'];
-                // $paciente->key = md5(json_encode($data));
+                $paciente->key = $key;
 
                 foreach ($data as $key => $value) {
                     if (!$value) {

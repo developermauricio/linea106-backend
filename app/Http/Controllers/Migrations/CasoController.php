@@ -27,6 +27,7 @@ class CasoController extends Controller
     const ATTRIBUTES = ',key_server,observaciones,narrativa,fuente,ultima_actualizacion,paciente,motivoConsulta,quien_comunica,linea_intervencion,psicologo,fecha_inicio,origen,tipo_paciente,fecha_fin,cual_motivo,turno,nombre_llama,documento_llama,relacion,remision,respuesta,radicado,etnicidad,especificoViolencia,especificoSuicidio,especificoSaludMental,especificoEstadosEmocionales,especificoVulnerabilidad,especificoContexto,especificoSalud,especificoTrastornos,especificoCoronavirus,especificoFamiliar,especificoSustancias,especificoProtocolos,especificoSaludSexual,especificoLaboral,especificoEducacion,numberOfDocs,';
 
     private $dateNow;
+    private $attributes = ["key_server", "observaciones", "narrativa", "fuente", "ultima_actualizacion", "paciente", "motivoConsulta", "quien_comunica", "linea_intervencion", "psicologo", "fecha_inicio", "origen", "tipo_paciente", "fecha_fin", "cual_motivo", "turno", "nombre_llama", "documento_llama", "relacion", "remision", "respuesta", "radicado", "etnicidad", "especificoViolencia", "especificoSuicidio", "especificoSaludMental", "especificoEstadosEmocionales", "especificoVulnerabilidad", "especificoContexto", "especificoSalud", "especificoTrastornos", "especificoCoronavirus", "especificoFamiliar", "especificoSustancias", "especificoProtocolos", "especificoSaludSexual", "especificoLaboral", "especificoEducacion", "numberOfDocs"];
 
     public function __construct()
     {
@@ -55,15 +56,33 @@ class CasoController extends Controller
         ], 201);
     }
 
+    private function getKey($data)
+    {
+        if (isset($data["key_server"]) && $data["key_server"] && trim($data["key_server"])) {
+            return $data["key_server"];
+        }
+        $key = '';
+        foreach ($this->attributes as $attribute) {
+            if (isset($data[$attribute]) && $data[$attribute]) {
+                $key .= '_' . $data[$attribute];
+            } else {
+                $key .= '_';
+            }
+        }
+        return $key;
+    }
+
     private function createCaso($data)
     {
         try {
-            $caso = Caso::where('key_server', $data['key_server'])->first();
+            $key = md5($this->getKey($data));
+            $caso = Caso::where('key', $key)->first();
             if (!$caso) {
                 DB::beginTransaction();
 
                 $caso = new Caso();
                 $caso->key_server = $data['key_server'];
+                $caso->key = $key;
                 $caso->errores = '';
 
                 if (isset($data['motivoConsulta'])) {

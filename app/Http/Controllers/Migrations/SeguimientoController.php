@@ -13,6 +13,8 @@ class SeguimientoController extends Controller
 {
     const ATTRIBUTES = ',key_server,id_caso,psicologo,fecha,seguimiento,';
 
+    private $attributes = ["key_server", "id_caso", "psicologo", "fecha", "seguimiento"];
+
     public function restore(Request $request)
     {
         $seguimientos = collect($request->input('items'));
@@ -33,15 +35,32 @@ class SeguimientoController extends Controller
         return response()->json([], 201);
     }
 
+    private function getKey($data)
+    {
+        if (isset($data["key_server"]) && $data["key_server"] && trim($data["key_server"])) {
+            return $data["key_server"];
+        }
+        $key = '';
+        foreach ($this->attributes as $attribute) {
+            if (isset($data[$attribute]) && $data[$attribute]) {
+                $key .= '_' . $data[$attribute];
+            } else {
+                $key .= '_';
+            }
+        }
+        return $key;
+    }
+
     private function createSeguimiento($data)
     {
         try {
-            $seguimiento = Seguimiento::where('key_server', $data['key_server'])->first();
+            $key = md5($this->getKey($data));
+            $seguimiento = Seguimiento::where('key', $key)->first();
             if (!$seguimiento) {
                 DB::beginTransaction();
                 $seguimiento = new Seguimiento();
                 $seguimiento->key_server = $data['key_server'];
-                $seguimiento->key = md5(json_encode($data));
+                $seguimiento->key = $key;
 
                 foreach ($data as $key => $value) {
                     if (!strpos(self::ATTRIBUTES, $key)) {

@@ -11,6 +11,8 @@ class UsuarioController extends Controller
 {
     const ATTRIBUTES = ',key_server,id,correo,nombre,apellido,rol,clave,';
 
+    private $attributes = ["key_server","id","correo"];
+
     public function restore(Request $request)
     {
         $users = collect($request->input('items'));
@@ -31,15 +33,32 @@ class UsuarioController extends Controller
         return response()->json([], 201);
     }
 
+    private function getKey($data)
+    {
+        if (isset($data["key_server"]) && $data["key_server"] && trim($data["key_server"])) {
+            return $data["key_server"];
+        }
+        $key = '';
+        foreach ($this->attributes as $attribute) {
+            if (isset($data[$attribute]) && $data[$attribute]) {
+                $key .= '_' . $data[$attribute];
+            } else {
+                $key .= '_';
+            }
+        }
+        return $key;
+    }
+
     private function createUser($data)
     {
         try {
-            $user = User::where('key_server', $data['key_server'])->first();
+            $key = md5($this->getKey($data));
+            $user = User::where('key', $key)->first();
             if (!$user) {
                 DB::beginTransaction();
                 $user = new User();
                 $user->key_server = $data['key_server'];
-                $user->key = md5(json_encode($data));
+                $user->key = $key;
 
                 foreach ($data as $key => $value) {
                     if (!strpos(self::ATTRIBUTES, $key)) {

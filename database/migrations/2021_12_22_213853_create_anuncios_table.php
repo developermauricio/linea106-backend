@@ -16,7 +16,7 @@ class CreateAnunciosTable extends Migration
         Schema::create('anuncios', function (Blueprint $table) {
             $table->id();
             $table->string('key_server')->nullable();
-            $table->string('key')->nullable();
+            $table->char('key', 32)->unique('key_md5')->nullable();
             $table->string('title');
             $table->longText('description');
             $table->timestamps();
