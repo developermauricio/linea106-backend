@@ -108,6 +108,12 @@ Route::middleware(['auth:api'])->group(function () {
         \App\Http\Controllers\Common\MotivoConsultaController::class, 'getMotivosConsultaReportes'
     ]);
 
+    Route::get('/filter-data', [
+        App\Http\Controllers\Common\CasoController::class,
+        'getFilterData'
+    ]);
+
+
     Route::get('init-data-case', [
         App\Http\Controllers\Common\CasoController::class, 'initDataCase'
     ]);

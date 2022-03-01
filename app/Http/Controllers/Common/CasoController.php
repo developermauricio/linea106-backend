@@ -45,7 +45,7 @@ class CasoController extends Controller
         $paciente = $request->input('paciente');
         $linea_intervencion = $request->input('linea_intervencion');
         $mis_casos = $request->input('mis_casos', false);
-        $fecha_inicio = $request->input('fecha_inicio');
+        $fecha_inicio = $request->input('fecha');
 
         $casos = Caso::with([
             'paciente',
@@ -61,9 +61,11 @@ class CasoController extends Controller
         }
 
         if ($origen) {
-            $casos->whereHas('origen', function ($q_origen) use ($origen) {
-                return $q_origen->where('name', 'like', "%{$origen}%");
-            });
+            $casos->where('origen_id', $origen);
+        }
+
+        if ($fecha_inicio) {
+            $casos->whereDate('fecha_inicio', '=', $fecha_inicio);
         }
 
         if ($paciente) {
@@ -73,23 +75,17 @@ class CasoController extends Controller
         }
 
         if (!$mis_casos && $usuario) {
-            $casos->whereHas('usuario', function ($q_usuario) use ($usuario) {
-                return $q_usuario->whereRaw('concat(name, " ", last_name) like ?', ["%{$usuario}%"]);
-            });
+            $casos->where('usuario_id', $usuario);
         } else if ($mis_casos) {
             $casos->where('usuario_id', auth('api')->user()->id);
         }
 
         if ($motivo_consulta) {
-            $casos->whereHas('motivo_consulta', function ($q_motivo_consulta)  use ($motivo_consulta) {
-                return $q_motivo_consulta->where('name', 'like', "%{$motivo_consulta}%");
-            });
+            $casos->where('motivo_consulta_id', $motivo_consulta);
         }
 
         if ($linea_intervencion) {
-            $casos->whereHas('linea_intervencion', function ($q_linea_intervencion) use ($linea_intervencion) {
-                return $q_linea_intervencion->where('name', 'like', "%{$linea_intervencion}%");
-            });
+            $casos->where('linea_intervencion_id', $linea_intervencion);
         }
 
         $casos->orderBy('updated_at');
@@ -435,5 +431,16 @@ class CasoController extends Controller
         ])->findOrFail($id);
 
         return response()->json($caso);
+    }
+
+    public function getFilterData()
+    {
+        $response = new \stdClass();
+        $response->psicologos = User::selectRaw('concat(name, " ", last_name) as name, id')->whereRaw('concat(name, " ", last_name) <> "N/A N/A"')->get();
+        $response->motivos = MotivoConsulta::select('id', 'name')->get();
+        $response->origenes = Origen::select('id', 'name')->get();
+        $response->lineas_intervencion = LineaIntervencion::select('id', 'name')->get();
+
+        return response()->json($response);
     }
 }
