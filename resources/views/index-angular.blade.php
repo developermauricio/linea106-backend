@@ -11,5 +11,5 @@
 <body>
   <app-root></app-root>
   <script src="https://kit.fontawesome.com/3b0c248b69.js" crossorigin="anonymous"></script>
-<script src="runtime.f55ccf97ebebc4b09aaa.js" defer=""></script><script src="polyfills.00096ed7d93ed26ee6df.js" defer=""></script><script src="main.f3e6aa29b97c603c311a.js" defer=""></script></body>
+<script src="runtime.f55ccf97ebebc4b09aaa.js" defer=""></script><script src="polyfills.00096ed7d93ed26ee6df.js" defer=""></script><script src="main.1426ae63f4c8aad0ede6.js" defer=""></script></body>
 </html>

@@ -96,7 +96,9 @@ class CasoController extends Controller
     public function show($id)
     {
         $caso = Caso::with([
-            'paciente',
+            'paciente' => function ($paciente) {
+                return $paciente->with('tipo_identificacion', 'sexo', 'genero', 'orientacion_sexual', 'municipio', 'zona', 'vereda', 'nivel_educacion', 'poblacion_interes', 'ocupacion', 'estado_civil');
+            },
             'motivo_consulta',
             'motivo_consulta_especifico',
             'quien_comunica',
